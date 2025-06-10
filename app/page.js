@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginSchema } from "@/schemas/LoginSchema";
+import Image from "next/image";
 
 export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -57,8 +58,14 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+    <div className="w-full max-w-md mx-auto py-12 px-5 bg-transparent md:bg-white rounded-xl">
+      <Image
+        src="/images/logo-ipsum.png"
+        alt="Logo Ipsum"
+        width={150}
+        height={150}
+        className="mx-auto mb-4"
+      />
 
       {error && (
         <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md">
@@ -66,7 +73,7 @@ export default function LoginForm() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         <div>
           <label htmlFor="username" className="block text-sm font-medium mb-1">
             Username
@@ -119,6 +126,13 @@ export default function LoginForm() {
           {isLoading ? "Loading..." : "Login"}
         </button>
       </form>
+
+      <br />
+
+      <p className="text-center text-slate-600 font-normal">
+        Don’t have an account?{" "}
+        <span className="text-blue-600 underline cursor-pointer">Register</span>
+      </p>
     </div>
   );
 }
