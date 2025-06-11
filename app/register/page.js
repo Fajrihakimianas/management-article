@@ -6,16 +6,23 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
 import { RegisterSchema } from "@/schemas/RegisterSchema";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export default function RegisterForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  const form = useForm({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
       username: "",
@@ -75,81 +82,110 @@ export default function RegisterForm() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-        <div>
-          <label htmlFor="username" className="block text-sm font-medium mb-1">
-            Username
-          </label>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <Input placeholder="Input username" {...field} />
+                </FormControl>
 
-          <input
-            id="username"
-            type="text"
-            placeholder="Input username"
-            className={`w-full p-2 border rounded-md ${
-              errors.username ? "border-red-500" : "border-gray-300"
-            }`}
-            disabled={isLoading}
-            {...register("username")}
+                <FormMessage />
+              </FormItem>
+            )}
           />
-          {errors.username && (
-            <p className="mt-1 text-sm text-red-600">
-              {errors.username.message}
-            </p>
-          )}
-        </div>
 
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium mb-1">
-            Password
-          </label>
+          <Button type="submit" className="bg-blue-600 w-full">
+            Register
+          </Button>
+          {/* <div>
+            <label
+              htmlFor="username"
+              className="block text-sm font-medium mb-1"
+            >
+              Username
+            </label>
 
-          <input
-            id="password"
-            type="password"
-            placeholder="Input password"
-            className={`w-full p-2 border rounded-md ${
-              errors.password ? "border-red-500" : "border-gray-300"
-            }`}
+            <input
+              id="username"
+              type="text"
+              placeholder="Input username"
+              className={`w-full p-2 border rounded-md ${
+                form.errors.username ? "border-red-500" : "border-gray-300"
+              }`}
+              disabled={isLoading}
+              {...form.register("username")}
+            />
+            {form.errors.username && (
+              <p className="mt-1 text-sm text-red-600">
+                {form.errors.username.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium mb-1"
+            >
+              Password
+            </label>
+
+            <input
+              id="password"
+              type="password"
+              placeholder="Input password"
+              className={`w-full p-2 border rounded-md ${
+                form.errors.password ? "border-red-500" : "border-gray-300"
+              }`}
+              disabled={isLoading}
+              {...form.register("password")}
+            />
+            {form.errors.password && (
+              <p className="mt-1 text-sm text-red-600">
+                {form.errors.password.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label htmlFor="role" className="block text-sm font-medium mb-1">
+              Role
+            </label>
+
+            <select
+              id="role"
+              placeholder="Select role"
+              className={`w-full p-2 border rounded-md ${
+                form.errors.role ? "border-red-500" : "border-gray-300"
+              }`}
+              disabled={isLoading}
+              {...form.register("role")}
+            >
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </select>
+
+            {form.errors.role && (
+              <p className="mt-1 text-sm text-red-600">
+                {form.errors.role.message}
+              </p>
+            )}
+          </div>
+
+          <button
+            type="submit"
             disabled={isLoading}
-            {...register("password")}
-          />
-          {errors.password && (
-            <p className="mt-1 text-sm text-red-600">
-              {errors.password.message}
-            </p>
-          )}
-        </div>
-
-        <div>
-          <label htmlFor="role" className="block text-sm font-medium mb-1">
-            Role
-          </label>
-
-          <select
-            id="role"
-            className={`w-full p-2 border rounded-md ${
-              errors.role ? "border-red-500" : "border-gray-300"
-            }`}
-            disabled={isLoading}
-            {...register("role")}
+            className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
-          </select>
-
-          {errors.role && (
-            <p className="mt-1 text-sm text-red-600">{errors.role.message}</p>
-          )}
-        </div>
-
-        <button
-          type="submit"
-          disabled={isLoading}
-          className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isLoading ? "Loading..." : "Register"}
-        </button>
-      </form>
+            {isLoading ? "Loading..." : "Register"}
+          </button> */}
+        </form>
+      </Form>
 
       <br />
 
