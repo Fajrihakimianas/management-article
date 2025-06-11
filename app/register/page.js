@@ -3,11 +3,11 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoginSchema } from "@/schemas/LoginSchema";
 import Image from "next/image";
 import Link from "next/link";
+import { RegisterSchema } from "@/schemas/RegisterSchema";
 
-export default function LoginForm() {
+export default function RegisterForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -16,10 +16,11 @@ export default function LoginForm() {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(LoginSchema),
+    resolver: zodResolver(RegisterSchema),
     defaultValues: {
       username: "",
       password: "",
+      role: "", // Default role, bisa diubah sesuai kebutuhan
     },
   });
 
@@ -119,12 +120,34 @@ export default function LoginForm() {
           )}
         </div>
 
+        <div>
+          <label htmlFor="role" className="block text-sm font-medium mb-1">
+            Role
+          </label>
+
+          <select
+            id="role"
+            className={`w-full p-2 border rounded-md ${
+              errors.role ? "border-red-500" : "border-gray-300"
+            }`}
+            disabled={isLoading}
+            {...register("role")}
+          >
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
+
+          {errors.role && (
+            <p className="mt-1 text-sm text-red-600">{errors.role.message}</p>
+          )}
+        </div>
+
         <button
           type="submit"
           disabled={isLoading}
           className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isLoading ? "Loading..." : "Login"}
+          {isLoading ? "Loading..." : "Register"}
         </button>
       </form>
 
@@ -132,12 +155,9 @@ export default function LoginForm() {
 
       <nav>
         <p className="text-center text-slate-600 font-normal">
-          Don’t have an account?{" "}
-          <Link
-            href="/register"
-            className="text-blue-600 underline cursor-pointer"
-          >
-            Register
+          Already have an account?{" "}
+          <Link href="/" className="text-blue-600 underline cursor-pointer">
+            Login
           </Link>
         </p>
       </nav>
