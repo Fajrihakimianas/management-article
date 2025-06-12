@@ -5,13 +5,13 @@ export const RegisterSchema = z.object({
     .string({
       message: "Username harus diisi",
     })
-    .min(3, { message: "Username minimal 3 karakter" })
-    .max(50, { message: "Username maksimal 50 karakter" }),
+    .min(3, { message: "Username must be at least 3 characters long" })
+    .max(30, { message: "Username max 30 characters" }),
   password: z
     .string()
-    .min(8, { message: "Password minimal 8 karakter" })
-    .max(100, { message: "Password maksimal 100 karakter" }),
+    .min(8, { message: "Password must be at least 8 characters long" })
+    .max(100, { message: "Password must be max 100 characters long" }),
   role: z.enum(["admin", "user"], {
-    message: "Role harus diisi",
+    message: "Role must be either 'admin' or 'user'",
   }),
 });
