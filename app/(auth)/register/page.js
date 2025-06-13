@@ -74,88 +74,89 @@ export default function RegisterForm() {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto py-12 px-5 bg-transparent md:bg-white rounded-xl">
-      <Image
-        src="/images/logo-ipsum.png"
-        alt="Logo Ipsum"
-        width={150}
-        height={150}
-        className="mx-auto mb-4"
-      />
+    <section className="h-screen flex justify-center items-center">
+      <div className="w-full max-w-md mx-auto py-12 px-5 bg-transparent md:bg-white rounded-xl">
+        <Image
+          src="/images/logo-ipsum.png"
+          alt="Logo Ipsum"
+          width={150}
+          height={150}
+          className="mx-auto mb-4"
+        />
 
-      {error && (
-        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md">
-          {error}
-        </div>
-      )}
+        {error && (
+          <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md">
+            {error}
+          </div>
+        )}
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Username</FormLabel>
-                <FormControl>
-                  <Input placeholder="Input username" {...field} />
-                </FormControl>
-
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="Input password"
-                    {...field}
-                  />
-                </FormControl>
-
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="role"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Role</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select Role" />
-                    </SelectTrigger>
+                    <Input placeholder="Input username" {...field} />
                   </FormControl>
 
-                  <SelectContent>
-                    <SelectItem value="user">User</SelectItem>
-                    <SelectItem value="admin">Admin</SelectItem>
-                  </SelectContent>
-                </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="Input password"
+                      {...field}
+                    />
+                  </FormControl>
 
-          <Button type="submit" className="bg-blue-600 w-full">
-            Register
-          </Button>
-          {/* <div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="role"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Role</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select Role" />
+                      </SelectTrigger>
+                    </FormControl>
+
+                    <SelectContent>
+                      <SelectItem value="user">User</SelectItem>
+                      <SelectItem value="admin">Admin</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button type="submit" className="bg-blue-600 w-full">
+              Register
+            </Button>
+            {/* <div>
             <label
               htmlFor="username"
               className="block text-sm font-medium mb-1"
@@ -237,19 +238,20 @@ export default function RegisterForm() {
           >
             {isLoading ? "Loading..." : "Register"}
           </button> */}
-        </form>
-      </Form>
+          </form>
+        </Form>
 
-      <br />
+        <br />
 
-      <nav>
-        <p className="text-center text-slate-600 font-normal">
-          Already have an account?{" "}
-          <Link href="/" className="text-blue-600 underline cursor-pointer">
-            Login
-          </Link>
-        </p>
-      </nav>
-    </div>
+        <nav>
+          <p className="text-center text-slate-600 font-normal">
+            Already have an account?{" "}
+            <Link href="/" className="text-blue-600 underline cursor-pointer">
+              Login
+            </Link>
+          </p>
+        </nav>
+      </div>
+    </section>
   );
 }
