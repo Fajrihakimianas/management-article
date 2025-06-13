@@ -1,3 +1,4 @@
+import ArticleCard from "@/components/articles/ArticleCard";
 import Image from "next/image";
 import React from "react";
 
@@ -139,13 +140,23 @@ export default function DetailArticle() {
           </div>
 
           {/* Comments Section */}
-          <div className="border-t pt-6">
-            <div className="flex items-center mb-4">
-              <span className="text-2xl mr-3">💬</span>
-              <p className="text-gray-600">
-                What do you think of Dev Mode? Have you tried it yet? Share your
-                experience in the comments!
-              </p>
+
+          <div className="flex items-center mb-10">
+            <span className="text-2xl mr-3">💬</span>
+            <p className="text-gray-600">
+              What do you think of Dev Mode? Have you tried it yet? Share your
+              experience in the comments!
+            </p>
+          </div>
+
+          <div>
+            <h2 className="text-lg font-semibold text-gray-800 mb-4">
+              Other Articles
+            </h2>
+            <div className="grid md:grid-cols-3 gap-4">
+              <ArticleCard />
+              <ArticleCard />
+              <ArticleCard />
             </div>
           </div>
         </div>
