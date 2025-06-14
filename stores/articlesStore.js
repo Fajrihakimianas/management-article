@@ -55,7 +55,7 @@ export const useArticlesStore = create(
             set({
               articles: data.articles || data.data || [],
               currentPage: data.page || data.page || 1,
-              totalPages: data.page || data.last_page || 1,
+              totalPages: Math.ceil(data.total / data.limit) || 1,
               totalArticles: data.total || data.count || 0,
               isLoading: false,
               filters: { ...get().filters, ...params },

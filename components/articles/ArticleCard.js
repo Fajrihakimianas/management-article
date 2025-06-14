@@ -22,10 +22,14 @@ export default function ArticleCard({ article }) {
           {article?.title}
         </h2>
 
-        <div className="text-sm md:text-base font-normal text-slate-600">
-          {/* Potong panjang content */}
+        <div
+          className="md:text-base font-normal text-slate-600"
+          style={{
+            fontSize: "14px",
+          }}
+        >
           {parse(
-            article?.content.length > 50
+            article?.content.length > 80
               ? `${article?.content.slice(0, 100)}...`
               : article?.content
           )}
