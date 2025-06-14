@@ -158,7 +158,7 @@ export const useAuthStore = create(
 
         // Redirect ke login
         if (typeof window !== "undefined") {
-          window.location.href = "/";
+          window.location.href = "/login";
         }
       },
 
