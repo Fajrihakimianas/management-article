@@ -10,11 +10,6 @@ export default function Content() {
 
       <div className="grid md:grid-cols-3 gap-10">
         <ArticleCard />
-        <ArticleCard />
-        <ArticleCard />
-        <ArticleCard />
-        <ArticleCard />
-        <ArticleCard />
       </div>
     </div>
   );
