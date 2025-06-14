@@ -58,6 +58,10 @@ export default function ArticleList() {
     }
   };
 
+  const handleClick = (articleId) => {
+    router.push(`/articles/${articleId}`);
+  };
+
   return (
     <div className="px-16 py-8">
       <h2 className="text-sm font-normal text-start mb-2">
@@ -66,7 +70,11 @@ export default function ArticleList() {
 
       <div className="grid md:grid-cols-3 gap-10">
         {articles.map((article) => (
-          <ArticleCard key={article.id} article={article} />
+          <ArticleCard
+            key={article.id}
+            article={article}
+            // handleClick={handleClick(article.id)}
+          />
         ))}
       </div>
 

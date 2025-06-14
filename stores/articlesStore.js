@@ -17,6 +17,7 @@ export const useArticlesStore = create(
     (set, get) => ({
       // Initial state
       articles: [],
+      detailArticle: null,
       categories: [],
       currentPage: 1,
       totalPages: 1,
@@ -189,7 +190,7 @@ export const useArticlesStore = create(
       },
 
       // Fetch single article
-      fetchArticleById: async (id) => {
+      fetchArticleBySlug: async (id) => {
         try {
           set({ isLoading: true, error: null });
 
@@ -205,8 +206,10 @@ export const useArticlesStore = create(
 
           if (response.ok) {
             const data = await response.json();
-            set({ isLoading: false });
-            return data.article || data.data;
+
+            set({ isLoading: false, detailArticle: data || data.data });
+
+            return data || data.data;
           } else {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
