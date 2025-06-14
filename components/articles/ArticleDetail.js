@@ -28,7 +28,12 @@ export default function ArticleDetail({ slug }) {
     <div className="md:px-[160px] md:py-[40px] flex flex-col justify-center items-center">
       <div className="text-center mb-8">
         <p className="text-base md:text-base font-normal text-slate-600 mb-2">
-          {detailArticle?.createdAt} Created by {detailArticle?.user?.role}
+          {new Date(detailArticle?.createdAt).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}{" "}
+          Created by {detailArticle?.user?.role}
         </p>
 
         <h2 className="text-2xl md:text-3xl max-w-2xl font-semibold text-slate-900">

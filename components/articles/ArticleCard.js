@@ -19,7 +19,11 @@ export default function ArticleCard({ article }) {
 
         <div className="space-y-3 mt-4">
           <span className="text-xs md:text-sm font-light text-slate-600">
-            {article?.createdAt}
+            {new Date(article?.createdAt).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
           </span>
 
           <h2 className="text-base md:text-xl font-semibold text-slate-900">
