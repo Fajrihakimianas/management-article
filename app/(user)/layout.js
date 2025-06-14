@@ -1,8 +1,8 @@
 import "../globals.css";
 
 export const metadata = {
-  title: "User Layout",
-  description: "Layout for user pages",
+  title: "Articles",
+  description: "Articles for users",
 };
 
 export default function UserLayout({ children }) {

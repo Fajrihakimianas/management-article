@@ -24,8 +24,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/stores";
+import { toast } from "sonner";
 
 export default function RegisterForm() {
+  const router = useRouter();
+
+  const { setUser } = useAuthStore();
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -43,27 +50,36 @@ export default function RegisterForm() {
       setIsLoading(true);
       setError(null);
 
-      // Simulasi API call
-      console.log("Login data:", data);
+      const response = await fetch(
+        "https://test-fe.mysellerpintar.com/api/auth/register",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        }
+      );
 
-      // Di sini Anda akan melakukan fetch ke API login Anda
-      // Contoh:
-      // const response = await fetch("/api/auth/login", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify(data)
-      // });
-      //
-      // if (!response.ok) {
-      //   throw new Error("Login gagal");
-      // }
-      //
-      // const result = await response.json();
-      //
-      // if (result.success) {
-      //   // Redirect ke dashboard atau halaman utama
-      //   router.push("/dashboard");
-      // }
+      console.log("Response status:", response.status);
+
+      if (response.status === 400) {
+        toast(
+          <p className="text-red-500">
+            Register gagal / Username sudah terdaftar, silakan coba lagi!
+          </p>
+        );
+      }
+
+      if (response.status === 201) {
+        const result = await response.json();
+
+        setUser(result);
+
+        toast(<p className="text-green-500">Register berhasil!</p>);
+
+        const redirectPath = result.role === "Admin" ? "/admin" : "/articles";
+
+        router.push(redirectPath);
+      }
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Terjadi kesalahan saat login"
@@ -143,8 +159,8 @@ export default function RegisterForm() {
                     </FormControl>
 
                     <SelectContent>
-                      <SelectItem value="user">User</SelectItem>
-                      <SelectItem value="admin">Admin</SelectItem>
+                      <SelectItem value="User">User</SelectItem>
+                      <SelectItem value="Admin">Admin</SelectItem>
                     </SelectContent>
                   </Select>
 
