@@ -161,7 +161,7 @@ export const useArticlesStore = create(
       },
 
       // Reset filters
-      resetFilters: () => {
+      resetFilters: async () => {
         const defaultFilters = {
           category: "",
           search: "",

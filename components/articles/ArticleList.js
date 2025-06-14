@@ -16,6 +16,7 @@ export default function ArticleList() {
     fetchCategories,
     changePage,
     updateLimitForScreen,
+    resetFilters,
   } = useArticlesStore();
 
   useEffect(() => {
@@ -38,8 +39,13 @@ export default function ArticleList() {
         // Fetch categories first
         await fetchCategories();
 
+        // Reset filters to default
+        await resetFilters();
+
         // Fetch articles with current filters
         await fetchArticles();
+
+        // Reset filters to default
       } catch (error) {
         toast.error("Failed to load articles");
       }
