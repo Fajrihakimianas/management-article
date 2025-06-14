@@ -4,7 +4,7 @@ import parse from "html-react-parser";
 
 export default function ArticleCard({ article }) {
   return (
-    <div className="relative md:w-full w-fit h-fit mb-7">
+    <div className="relative md:w-full w-fit h-fit mb-5">
       <Image
         src="/images/img-article.png"
         alt="Article Image"
