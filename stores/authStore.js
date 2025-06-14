@@ -35,6 +35,55 @@ export const useAuthStore = create(
       error: null,
 
       // Actions
+      fetchUserProfile: async (token) => {
+        try {
+          set({ isLoading: true });
+
+          const response = await fetch(
+            "https://test-fe.mysellerpintar.com/api/auth/profile",
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          if (response.ok) {
+            const userProfile = await response.json();
+
+            const userInfo = {
+              id: userProfile.id,
+              username: userProfile.username,
+              role: userProfile.role,
+            };
+
+            set({
+              user: userInfo,
+              token: token,
+              isAuthenticated: true,
+              isLoading: false,
+              error: null,
+            });
+
+            setCookie("auth-token", token);
+            setCookie("auth-user", JSON.stringify(userInfo));
+
+            return userInfo;
+          } else {
+            throw new Error("Failed to fetch user profile");
+          }
+        } catch (error) {
+          set({
+            error: error.message,
+            isLoading: false,
+            isAuthenticated: false,
+          });
+          throw error;
+        }
+      },
+
       setUser: (userData) => {
         // Jika userData adalah object lengkap dengan token
         if (userData && typeof userData === "object") {

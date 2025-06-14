@@ -6,16 +6,29 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginSchema } from "@/schemas/LoginSchema";
 import Image from "next/image";
 import Link from "next/link";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/stores";
+import { toast } from "sonner";
 
 export default function LoginForm() {
+  const router = useRouter();
+
+  const { fetchUserProfile } = useAuthStore();
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  const form = useForm({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
       username: "",
@@ -28,27 +41,30 @@ export default function LoginForm() {
       setIsLoading(true);
       setError(null);
 
-      // Simulasi API call
-      console.log("Login data:", data);
+      const response = await fetch(
+        "https://test-fe.mysellerpintar.com/api/auth/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        }
+      );
 
-      // Di sini Anda akan melakukan fetch ke API login Anda
-      // Contoh:
-      // const response = await fetch("/api/auth/login", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify(data)
-      // });
-      //
-      // if (!response.ok) {
-      //   throw new Error("Login gagal");
-      // }
-      //
-      // const result = await response.json();
-      //
-      // if (result.success) {
-      //   // Redirect ke dashboard atau halaman utama
-      //   router.push("/dashboard");
-      // }
+      if (response.status === 400) {
+        toast(<p className="text-red-500">Login gagal, silakan coba lagi!</p>);
+      }
+
+      if (response.status === 200) {
+        const result = await response.json();
+
+        const userProfile = await fetchUserProfile(result.token);
+
+        toast(<p className="text-green-500">Login berhasil!</p>);
+
+        const redirectPath =
+          userProfile.role === "Admin" ? "/admin" : "/articles";
+        router.push(redirectPath);
+      }
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Terjadi kesalahan saat login"
@@ -75,70 +91,50 @@ export default function LoginForm() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-          <div>
-            <label
-              htmlFor="username"
-              className="block text-sm font-medium mb-1"
-            >
-              Username
-            </label>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Input username" {...field} />
+                  </FormControl>
 
-            <input
-              id="username"
-              type="text"
-              placeholder="Input username"
-              className={`w-full p-2 border rounded-md ${
-                errors.username ? "border-red-500" : "border-gray-300"
-              }`}
-              disabled={isLoading}
-              {...register("username")}
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            {errors.username && (
-              <p className="mt-1 text-sm text-red-600">
-                {errors.username.message}
-              </p>
-            )}
-          </div>
 
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium mb-1"
-            >
-              Password
-            </label>
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="Input password"
+                      {...field}
+                    />
+                  </FormControl>
 
-            <input
-              id="password"
-              type="password"
-              placeholder="Input password"
-              className={`w-full p-2 border rounded-md ${
-                errors.password ? "border-red-500" : "border-gray-300"
-              }`}
-              disabled={isLoading}
-              {...register("password")}
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            {errors.password && (
-              <p className="mt-1 text-sm text-red-600">
-                {errors.password.message}
-              </p>
-            )}
-          </div>
 
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isLoading ? "Loading..." : "Login"}
-          </button>
-        </form>
-
-        <br />
+            <Button type="submit" className="bg-blue-600 w-full">
+              Login
+            </Button>
+          </form>
+        </Form>
 
         <nav>
-          <p className="text-center text-slate-600 font-normal">
+          <p className="text-center text-sm mt-5 text-slate-600 font-normal">
             Don’t have an account?{" "}
             <Link
               href="/register"

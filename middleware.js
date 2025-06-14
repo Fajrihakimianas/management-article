@@ -1,21 +1,14 @@
 import { NextResponse } from "next/server";
 
 export function middleware(request) {
-  // Debug: Log current path dan cookies
-  console.log("Middleware triggered for:", request.nextUrl.pathname);
-
-  // 1. Ambil token dari cookies
   const token = request.cookies.get("auth-token")?.value;
 
-  // 2. Ambil user data dari cookies
   const userData = request.cookies.get("auth-user")?.value;
 
-  // 3. Daftar route yang memerlukan autentikasi
   const protectedRoutes = ["/articles", "/admin"];
   const adminRoutes = ["/admin"];
-  const publicRoutes = ["/", "/register"]; // Route yang boleh diakses tanpa login
+  const publicRoutes = ["/", "/register", "/login"]; // Route yang boleh diakses tanpa login
 
-  // 4. Cek jenis route
   const isProtectedRoute = protectedRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route)
   );
@@ -28,19 +21,17 @@ export function middleware(request) {
     (route) => request.nextUrl.pathname === route
   );
 
-  const isLoginPage = request.nextUrl.pathname === "/";
+  const isLoginPage = request.nextUrl.pathname === "/login";
   const isRegisterPage = request.nextUrl.pathname === "/register";
 
-  // 5. Redirect ke login jika mengakses protected route tanpa token
-  if (isProtectedRoute && !userData) {
+  if (isProtectedRoute && (!token || !userData)) {
     console.log("Access denied: No token for protected route");
     const loginUrl = new URL("/", request.url);
     loginUrl.searchParams.set("redirect", request.nextUrl.pathname);
     return NextResponse.redirect(loginUrl);
   }
 
-  // 6. Validasi token untuk protected routes
-  if (isProtectedRoute && userData) {
+  if (isProtectedRoute && (token || userData)) {
     try {
       const user = userData ? JSON.parse(userData) : null;
 
@@ -62,8 +53,7 @@ export function middleware(request) {
     }
   }
 
-  // 7. Cek role untuk admin routes
-  if (isAdminRoute && token) {
+  if (isAdminRoute && (token || userData)) {
     try {
       const user = userData ? JSON.parse(userData) : null;
 
@@ -72,15 +62,14 @@ export function middleware(request) {
         return NextResponse.redirect(new URL("/articles", request.url));
       }
 
-      console.log("👑 Admin access granted");
+      console.log("Admin access granted");
     } catch (error) {
       console.log("Error validating admin access:", error);
       return NextResponse.redirect(new URL("/", request.url));
     }
   }
 
-  // 8. Redirect logged-in user dari login/register page
-  if ((isLoginPage || isRegisterPage) && token) {
+  if ((isLoginPage || isRegisterPage) && (token || userData)) {
     try {
       const user = userData ? JSON.parse(userData) : null;
 
@@ -103,7 +92,6 @@ export function middleware(request) {
   return NextResponse.next();
 }
 
-// 8. Konfigurasi matcher - hanya untuk route yang diperlukan
 export const config = {
-  matcher: ["/articles/:path*", "/admin/:path*", "/", "/register"],
+  matcher: ["/articles/:path*", "/admin/:path*", "/", "/register", "/login"],
 };
