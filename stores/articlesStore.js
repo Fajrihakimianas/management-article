@@ -1,6 +1,17 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
+const isMobile = () => {
+  if (typeof window !== "undefined") {
+    return window.innerWidth <= 768; // atau bisa gunakan 640px untuk mobile yang lebih strict
+  }
+  return false;
+};
+
+const getLimit = () => {
+  return isMobile() ? 3 : 9;
+};
+
 export const useArticlesStore = create(
   persist(
     (set, get) => ({
@@ -16,7 +27,7 @@ export const useArticlesStore = create(
         category: "",
         search: "",
         page: 1,
-        limit: 9,
+        limit: getLimit(),
       },
 
       // Actions
@@ -24,13 +35,33 @@ export const useArticlesStore = create(
       setError: (error) => set({ error }),
       clearError: () => set({ error: null }),
 
+      updateLimitForScreen: async () => {
+        const newLimit = getLimit();
+        const currentFilters = get().filters;
+        if (currentFilters.limit !== newLimit) {
+          const updatedFilters = {
+            ...currentFilters,
+            limit: newLimit,
+            page: 1,
+          };
+          set({ filters: updatedFilters });
+          return get().fetchArticles(updatedFilters);
+        }
+      },
+
       // Fetch all articles
       fetchArticles: async (params = {}) => {
         try {
           set({ isLoading: true, error: null });
 
           const currentFilters = get().filters;
-          const queryParams = { ...currentFilters, ...params };
+          const appropriateLimit = params.limit || getLimit();
+
+          const queryParams = {
+            ...currentFilters,
+            ...params,
+            limit: appropriateLimit,
+          };
 
           const searchParams = new URLSearchParams();
           Object.keys(queryParams).forEach((key) => {
@@ -58,7 +89,7 @@ export const useArticlesStore = create(
               totalPages: Math.ceil(data.total / data.limit) || 1,
               totalArticles: data.total || 0,
               isLoading: false,
-              filters: { ...get().filters, ...params },
+              filters: { ...get().filters, ...params, limit: appropriateLimit },
             });
 
             return data;
@@ -102,19 +133,29 @@ export const useArticlesStore = create(
 
       // Search articles
       searchArticles: async (searchTerm) => {
-        const filters = { ...get().filters, search: searchTerm, page: 1 };
+        const filters = {
+          ...get().filters,
+          search: searchTerm,
+          page: 1,
+          limit: getLimit(),
+        };
         return get().fetchArticles(filters);
       },
 
       // Filter by category
       filterByCategory: async (category) => {
-        const filters = { ...get().filters, category, page: 1 };
+        const filters = {
+          ...get().filters,
+          category,
+          page: 1,
+          limit: getLimit(),
+        };
         return get().fetchArticles(filters);
       },
 
       // Change page
       changePage: async (page) => {
-        const filters = { ...get().filters, page };
+        const filters = { ...get().filters, page, limit: getLimit() };
         return get().fetchArticles(filters);
       },
 
@@ -124,7 +165,7 @@ export const useArticlesStore = create(
           category: "",
           search: "",
           page: 1,
-          limit: 9,
+          limit: getLimit(),
         };
         set({ filters: defaultFilters });
         return get().fetchArticles(defaultFilters);
@@ -132,7 +173,11 @@ export const useArticlesStore = create(
 
       // Update filters
       updateFilters: (newFilters) => {
-        const updatedFilters = { ...get().filters, ...newFilters };
+        const updatedFilters = {
+          ...get().filters,
+          ...newFilters,
+          limit: getLimit(),
+        };
         set({ filters: updatedFilters });
         return get().fetchArticles(updatedFilters);
       },

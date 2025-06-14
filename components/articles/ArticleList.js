@@ -15,7 +15,22 @@ export default function ArticleList() {
     fetchArticles,
     fetchCategories,
     changePage,
+    updateLimitForScreen,
   } = useArticlesStore();
+
+  useEffect(() => {
+    const handleResize = () => {
+      updateLimitForScreen();
+    };
+
+    if (typeof window !== "undefined") {
+      window.addEventListener("resize", handleResize);
+      // Call once on mount to set initial limit
+      handleResize();
+
+      return () => window.removeEventListener("resize", handleResize);
+    }
+  }, [updateLimitForScreen]);
 
   useEffect(() => {
     const initializeData = async () => {
