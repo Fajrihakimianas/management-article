@@ -1,15 +1,28 @@
 "use client";
 
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { LogOut } from "lucide-react";
 import { useAuthStore } from "@/stores";
 import { toast } from "sonner";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "../ui/button";
 
 export default function Header() {
   const { logout } = useAuthStore();
+
+  const [open, setOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -48,12 +61,32 @@ export default function Header() {
             <h4 className="text-sm leading-none font-normal">My Account</h4>
           </div>
 
-          <div
-            className="p-3 text-red-500 font-medium flex gap-2 cursor-pointer"
-            onClick={handleLogout}
-          >
-            <LogOut /> Log out
-          </div>
+          <Dialog>
+            <DialogTrigger asChild>
+              <div className="p-3 text-red-500 font-medium flex gap-2 cursor-pointer">
+                <LogOut /> Log out
+              </div>
+            </DialogTrigger>
+
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Logout</DialogTitle>
+
+                <DialogDescription>
+                  Are you sure want to logout?
+                </DialogDescription>
+              </DialogHeader>
+
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button variant="outline">Cancel</Button>
+                </DialogClose>
+                <Button className="bg-blue-500" onClick={handleLogout}>
+                  Logout
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </PopoverContent>
       </Popover>
     </div>
