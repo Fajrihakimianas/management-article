@@ -6,5 +6,5 @@ export const metadata = {
 };
 
 export default function UserLayout({ children }) {
-  return <main>{children}</main>;
+  return <main className="bg-white">{children}</main>;
 }
