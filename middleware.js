@@ -5,7 +5,7 @@ export function middleware(request) {
 
   const userData = request.cookies.get("auth-user")?.value;
 
-  const protectedRoutes = ["/articles", "/admin"];
+  const protectedRoutes = ["/articles"];
   const adminRoutes = ["/admin"];
 
   const isProtectedRoute = protectedRoutes.some((route) =>
@@ -55,7 +55,7 @@ export function middleware(request) {
 
       if (!user || user.role !== "Admin") {
         console.log("Access denied: Not admin role");
-        return NextResponse.redirect(new URL("/articles", request.url));
+        return NextResponse.redirect(new URL("/login", request.url));
       }
 
       console.log("Admin access granted");

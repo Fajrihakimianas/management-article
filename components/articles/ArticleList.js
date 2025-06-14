@@ -64,10 +64,6 @@ export default function ArticleList() {
     }
   };
 
-  const handleClick = (articleId) => {
-    router.push(`/articles/${articleId}`);
-  };
-
   return (
     <div className="px-16 py-8">
       <h2 className="text-sm font-normal text-start mb-2">
