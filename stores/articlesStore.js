@@ -209,7 +209,7 @@ export const useArticlesStore = create(
 
             set({ isLoading: false, detailArticle: data || data.data });
 
-            return data || data.data;
+            return get().filterByCategory(data.categoryId || "");
           } else {
             throw new Error(`HTTP error! status: ${response.status}`);
           }

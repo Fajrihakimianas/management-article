@@ -6,8 +6,6 @@ import parse from "html-react-parser";
 import Link from "next/link";
 
 export default function ArticleCard({ article }) {
-  console.log("ArticleCard article:", article);
-
   return (
     <Link href={`/articles/${article.id}`} className="block">
       <div className="relative md:w-full w-fit h-fit cursor-pointer mb-5">

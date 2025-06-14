@@ -70,11 +70,7 @@ export default function ArticleList() {
 
       <div className="grid md:grid-cols-3 gap-10">
         {articles.map((article) => (
-          <ArticleCard
-            key={article.id}
-            article={article}
-            // handleClick={handleClick(article.id)}
-          />
+          <ArticleCard key={article.id} article={article} />
         ))}
       </div>
 

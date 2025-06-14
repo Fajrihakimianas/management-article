@@ -5,9 +5,11 @@ import Image from "next/image";
 import React, { useEffect } from "react";
 import parse from "html-react-parser";
 import { useArticlesStore } from "@/stores";
+import { toast } from "sonner";
+import ArticleCard from "./ArticleCard";
 
 export default function ArticleDetail({ slug }) {
-  const { detailArticle, fetchArticleBySlug } = useArticlesStore();
+  const { articles, detailArticle, fetchArticleBySlug } = useArticlesStore();
 
   useEffect(() => {
     const initializeData = async () => {
@@ -44,12 +46,23 @@ export default function ArticleDetail({ slug }) {
         />
 
         <div
-          className="md:text-base font-normal text-slate-600"
+          className="md:text-base font-normal text-slate-600 mt-5"
           style={{
-            fontSize: "14px",
+            fontSize: "16px",
           }}
         >
           {parse(detailArticle?.content || "No content available")}
+        </div>
+      </div>
+
+      <div className="relative w-full mt-10">
+        <h2 className="text-lg md:text-lg font-semibold text-slate-900 mb-4">
+          Other articles
+        </h2>
+        <div className="grid md:grid-cols-3 gap-5">
+          {articles.map((article) => (
+            <ArticleCard key={article.id} article={article} />
+          ))}
         </div>
       </div>
     </div>
