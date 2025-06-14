@@ -56,7 +56,7 @@ export const useArticlesStore = create(
               articles: data.articles || data.data || [],
               currentPage: data.page || data.page || 1,
               totalPages: Math.ceil(data.total / data.limit) || 1,
-              totalArticles: data.total || data.count || 0,
+              totalArticles: data.total || 0,
               isLoading: false,
               filters: { ...get().filters, ...params },
             });
@@ -179,7 +179,7 @@ export const useArticlesStore = create(
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         categories: state.categories,
-        filters: state.filters,
+        // filters: state.filters,
       }),
     }
   )
