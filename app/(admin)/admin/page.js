@@ -8,30 +8,11 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { useArticlesStore } from "@/stores";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
+
+import { useState } from "react";
 
 export default function AdminPage() {
-  const { articles, fetchArticles } = useArticlesStore();
-
   const [activeMenu, setActiveMenu] = useState("articles");
-
-  useEffect(() => {
-    const initializeData = async () => {
-      try {
-        // Fetch categories first
-        await fetchCategories();
-
-        // Fetch articles with current filters
-        await fetchArticles();
-      } catch (error) {
-        toast.error("Failed to load articles");
-      }
-    };
-
-    initializeData();
-  }, []);
 
   const renderContent = () => {
     switch (activeMenu) {

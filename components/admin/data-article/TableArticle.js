@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import React, { useEffect } from "react";
@@ -17,57 +18,51 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useArticlesStore } from "@/stores";
 import { toast } from "sonner";
+import PaginationComponent from "@/components/pagination/Pagination";
 
 export default function TableArticle() {
-  const invoices = [
-    {
-      invoice: "INV001",
-      paymentStatus: "Paid",
-      totalAmount: "$250.00",
-      paymentMethod: "Credit Card",
-    },
-    {
-      invoice: "INV002",
-      paymentStatus: "Pending",
-      totalAmount: "$150.00",
-      paymentMethod: "PayPal",
-    },
-    {
-      invoice: "INV003",
-      paymentStatus: "Unpaid",
-      totalAmount: "$350.00",
-      paymentMethod: "Bank Transfer",
-    },
-    {
-      invoice: "INV004",
-      paymentStatus: "Paid",
-      totalAmount: "$450.00",
-      paymentMethod: "Credit Card",
-    },
-    {
-      invoice: "INV005",
-      paymentStatus: "Paid",
-      totalAmount: "$550.00",
-      paymentMethod: "PayPal",
-    },
-    {
-      invoice: "INV006",
-      paymentStatus: "Pending",
-      totalAmount: "$200.00",
-      paymentMethod: "Bank Transfer",
-    },
-    {
-      invoice: "INV007",
-      paymentStatus: "Unpaid",
-      totalAmount: "$300.00",
-      paymentMethod: "Credit Card",
-    },
-  ];
+  const {
+    totalPages,
+    currentPage,
+    articles,
+    totalArticles,
+    fetchArticles,
+    fetchCategories,
+    changePage,
+  } = useArticlesStore();
+
+  useEffect(() => {
+    const initializeData = async () => {
+      try {
+        // Fetch categories first
+        await fetchCategories();
+
+        // Fetch articles with current filters
+        await fetchArticles();
+      } catch (error) {
+        toast.error("Failed to load articles");
+      }
+    };
+
+    initializeData();
+  }, []);
+
+  const handlePageChange = async (page) => {
+    try {
+      await changePage(page);
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (error) {
+      toast.error("Failed to change page");
+    }
+  };
 
   return (
     <div className="border overflow-hidden border-slate-200 bg-white rounded-md">
       <div className="border-b bg-gray-50">
-        <h2 className="text-sm font-medium p-4">Total Articles : 25</h2>
+        <h2 className="text-sm font-medium p-4">
+          Total Articles : {totalArticles}
+        </h2>
       </div>
 
       <div className="border-b bg-gray-50 flex p-4 gap-2">
@@ -92,7 +87,7 @@ export default function TableArticle() {
         <TableHeader className="bg-slate-200/60">
           <TableRow>
             <TableHead className="text-center">Thumbnails</TableHead>
-            <TableHead className="text-center">Title</TableHead>
+            <TableHead className="text-center w-28">Title</TableHead>
             <TableHead className="text-center">Category</TableHead>
             <TableHead className="text-center">Created at</TableHead>
             <TableHead className="text-center">Action</TableHead>
@@ -100,24 +95,38 @@ export default function TableArticle() {
         </TableHeader>
 
         <TableBody>
-          {invoices.map((invoice) => (
-            <TableRow key={invoice.invoice}>
-              <TableCell className="font-medium text-center">
-                {invoice.invoice}
+          {articles.map((item) => (
+            <TableRow key={item.id}>
+              <TableCell className="py-5 font-medium text-center">
+                Gambar
               </TableCell>
-              <TableCell className="text-center">
-                {invoice.paymentStatus}
+              <TableCell className="py-5 font-light text-sm text-start">
+                {item.title}
               </TableCell>
-              <TableCell className="text-center">
-                {invoice.paymentMethod}
+              <TableCell className="py-5 font-light text-sm text-center">
+                {item.category?.name || "Uncategorized"}
               </TableCell>
-              <TableCell className="text-center">
-                {invoice.totalAmount}
+              <TableCell className="py-5 font-light text-sm text-center">
+                {new Date(item?.createdAt).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
+
+      <div className="p-5 border-t">
+        {totalArticles > 1 && (
+          <PaginationComponent
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        )}
+      </div>
     </div>
   );
 }
