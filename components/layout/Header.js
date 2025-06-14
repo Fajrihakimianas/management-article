@@ -36,7 +36,7 @@ export default function Header({ homepage }) {
     return (
       <div className="absolute z-40 w-full px-8 py-6 flex justify-between items-center">
         <Image
-          src="/images/logo-ipsum.png"
+          src="/images/logo-ipsum-white.png"
           alt="Header Image"
           width={100}
           height={100}
