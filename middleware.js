@@ -7,7 +7,6 @@ export function middleware(request) {
 
   const protectedRoutes = ["/articles", "/admin"];
   const adminRoutes = ["/admin"];
-  const publicRoutes = ["/", "/register", "/login"]; // Route yang boleh diakses tanpa login
 
   const isProtectedRoute = protectedRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route)
@@ -17,11 +16,8 @@ export function middleware(request) {
     request.nextUrl.pathname.startsWith(route)
   );
 
-  const isPublicRoute = publicRoutes.some(
-    (route) => request.nextUrl.pathname === route
-  );
-
   const isLoginPage = request.nextUrl.pathname === "/login";
+
   const isRegisterPage = request.nextUrl.pathname === "/register";
 
   if (isProtectedRoute && (!token || !userData)) {
